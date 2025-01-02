@@ -246,11 +246,11 @@ pub const Sizing = extern struct {
     w: SizingAxis = .{},
     h: SizingAxis = .{},
 
-    pub const grow = Sizing{ .h = .grow, .w = .grow };
-    pub const fit = Sizing{ .h = .fit, .w = .fit };
+    pub const grow = Sizing{ .h = SizingAxis.grow, .w = SizingAxis.grow };
+    pub const fit = Sizing{ .h = SizingAxis.fit, .w = SizingAxis.fit };
 
     pub fn fixed(w: f32, h: f32) Sizing {
-        return Sizing{ .w = .fixed(w), .h = .fixed(h) };
+        return Sizing{ .w = SizingAxis.fixed(w), .h = SizingAxis.fixed(h) };
     }
 };
 

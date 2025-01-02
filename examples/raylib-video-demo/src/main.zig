@@ -54,8 +54,8 @@ pub fn main() !void {
         cl.updateScrollContainers(true, scrollDelta, rl.getFrameTime());
 
         const content_background_config = cl.RectangleConfig{
-            .color = .init(90, 90, 90, 255),
-            .corner_radius = .all(8),
+            .color = cl.Color.init(90, 90, 90, 255),
+            .corner_radius = cl.CornerRadius.all(8),
         };
 
         // Toggle the inspector with spacebar
@@ -66,17 +66,17 @@ pub fn main() !void {
             .id = cl.Id("OuterContainer"),
             .layout = .{
                 .direction = .top_to_bottom,
-                .sizing = .grow,
-                .padding = .all(16),
+                .sizing = cl.Sizing.grow,
+                .padding = cl.Padding.all(16),
                 .child_gap = 16,
             },
-            .rectangle = .{ .color = .init(43, 41, 51, 255) },
+            .rectangle = .{ .color = cl.Color.init(43, 41, 51, 255) },
         })) {
             defer cl.close();
             if (cl.open(.{
                 .id = cl.Id("HeaderBar"),
                 .layout = .{
-                    .sizing = .{ .w = .grow, .h = .fixed(60) },
+                    .sizing = .{ .w = cl.SizingAxis.grow, .h = cl.SizingAxis.fixed(60) },
                     .padding = .{ .x = 16 },
                     .child_gap = 16,
                     .alignment = .left_center,
@@ -88,8 +88,8 @@ pub fn main() !void {
                     .id = cl.Id("FileButton"),
                     .layout = .{ .padding = .{ .x = 16, .y = 8 } },
                     .rectangle = .{
-                        .color = .init(140, 140, 140, 255),
-                        .corner_radius = .all(5),
+                        .color = cl.Color.init(140, 140, 140, 255),
+                        .corner_radius = cl.CornerRadius.all(5),
                     },
                 })) {
                     defer cl.close();
@@ -113,8 +113,8 @@ pub fn main() !void {
                         })) {
                             defer cl.close();
                             if (cl.open(.{
-                                .layout = .{ .direction = .top_to_bottom, .sizing = .{ .w = .fixed(200) } },
-                                .rectangle = .{ .color = .init(40, 40, 40, 255), .corner_radius = .all(8) },
+                                .layout = .{ .direction = .top_to_bottom, .sizing = .{ .w = cl.SizingAxis.fixed(200) } },
+                                .rectangle = .{ .color = cl.Color.init(40, 40, 40, 255), .corner_radius = cl.CornerRadius.all(8) },
                             })) {
                                 defer cl.close();
                                 renderDropdownMenuItem("New");
@@ -125,7 +125,7 @@ pub fn main() !void {
                     }
                 }
                 renderHeaderButton("Edit");
-                cl.element(.{ .layout = .{ .sizing = .grow } });
+                cl.element(.{ .layout = .{ .sizing = cl.Sizing.grow } });
                 renderHeaderButton("Upload");
                 renderHeaderButton("Media");
                 renderHeaderButton("Support");
@@ -133,7 +133,7 @@ pub fn main() !void {
 
             if (cl.open(.{
                 .id = cl.Id("LowerContent"),
-                .layout = .{ .sizing = .grow, .child_gap = 16 },
+                .layout = .{ .sizing = cl.Sizing.grow, .child_gap = 16 },
             })) {
                 defer cl.close();
                 if (cl.open(.{
@@ -141,16 +141,16 @@ pub fn main() !void {
                     .rectangle = content_background_config,
                     .layout = .{
                         .direction = .top_to_bottom,
-                        .padding = .all(16),
+                        .padding = cl.Padding.all(16),
                         .child_gap = 8,
-                        .sizing = .{ .w = .fixed(250), .h = .grow },
+                        .sizing = .{ .w = cl.SizingAxis.fixed(250), .h = cl.SizingAxis.grow },
                     },
                 })) {
                     defer cl.close();
                     for (documents, 0..) |document, i| {
                         const sidebar_button_layout = cl.LayoutConfig{
-                            .sizing = .{ .w = .grow },
-                            .padding = .all(16),
+                            .sizing = .{ .w = cl.SizingAxis.grow },
+                            .padding = cl.Padding.all(16),
                         };
 
                         // `cl.open()` and `cl.close()` are just functions, there is nothing special
@@ -161,16 +161,16 @@ pub fn main() !void {
                             _ = cl.open(.{
                                 .layout = sidebar_button_layout,
                                 .rectangle = .{
-                                    .color = .init(120, 120, 120, 255),
-                                    .corner_radius = .all(8),
+                                    .color = cl.Color.init(120, 120, 120, 255),
+                                    .corner_radius = cl.CornerRadius.all(8),
                                 },
                             });
                         } else {
                             _ = cl.open(.{
                                 .layout = sidebar_button_layout,
                                 .rectangle = if (cl.hovered()) .{
-                                    .color = .init(120, 120, 120, 120),
-                                    .corner_radius = .all(8),
+                                    .color = cl.Color.init(120, 120, 120, 120),
+                                    .corner_radius = cl.CornerRadius.all(8),
                                 } else null,
                             });
                             cl.onHover(handleSidebarInteraction, i); // TODO: Improve this
@@ -191,8 +191,8 @@ pub fn main() !void {
                     .layout = .{
                         .direction = .top_to_bottom,
                         .child_gap = 16,
-                        .padding = .all(16),
-                        .sizing = .grow,
+                        .padding = cl.Padding.all(16),
+                        .sizing = cl.Sizing.grow,
                     },
                 })) {
                     defer cl.close();
@@ -213,7 +213,7 @@ pub fn main() !void {
         const render_commands = cl.endLayout();
 
         rl.beginDrawing();
-        rl.clearBackground(.black);
+        rl.clearBackground(rl.Color.black);
         renderer.render(render_commands, frame_arena.allocator());
         rl.endDrawing();
 
@@ -225,8 +225,8 @@ fn renderHeaderButton(text: []const u8) void {
     if (cl.open(.{
         .layout = .{ .padding = .{ .x = 16, .y = 8 } },
         .rectangle = .{
-            .color = .init(140, 140, 140, 255),
-            .corner_radius = .all(5),
+            .color = cl.Color.init(140, 140, 140, 255),
+            .corner_radius = cl.CornerRadius.all(5),
         },
     })) {
         defer cl.close();
@@ -239,7 +239,7 @@ fn renderHeaderButton(text: []const u8) void {
 }
 
 fn renderDropdownMenuItem(text: []const u8) void {
-    if (cl.open(.{ .layout = .{ .padding = .all(16) } })) {
+    if (cl.open(.{ .layout = .{ .padding = cl.Padding.all(16) } })) {
         defer cl.close();
         cl.text(text, .{
             .font_id = FONT_ID_BODY_16,
@@ -262,8 +262,9 @@ fn handleSidebarInteraction(
         std.debug.assert(index < documents.len);
         selected_document_index = index;
 
-        // foo = index;
-        std.debug.print("{d}\n", .{index});
+        // FIXME: Program receives signal 5 (SIGTRAP) if I don't print `user_data`. All the memory
+        // layouts look fine.
+        // std.debug.print("{d}\n", .{index});
     }
 }
 

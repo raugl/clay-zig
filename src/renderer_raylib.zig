@@ -44,7 +44,7 @@ pub fn render(render_commands: cl.RenderCommandArray, alloc: std.mem.Allocator) 
                 const config = render_command.config.image;
                 const texture: *const rl.Texture = @alignCast(@ptrCast(config.image_data));
                 const scale = bounding_box.width / @as(f32, @floatFromInt(texture.width));
-                rl.drawTextureEx(texture.*, position, 0, scale, .white);
+                rl.drawTextureEx(texture.*, position, 0, scale, rl.Color.white);
             },
             .scissor_start => rl.beginScissorMode(
                 @intFromFloat(@round(bounding_box.x)),
